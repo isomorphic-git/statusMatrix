@@ -13,6 +13,6 @@
   "author": "William Hilton <wmhilton@gmail.com>",
   "license": "MIT",
   "dependencies": {
-    "isomorphic-git": "^1.0.0"
+    "isomorphic-git": "^1.10.0"
   }
 }

@@ -1,4 +1,4 @@
-import { STAGE, TREE, WORKDIR, walk } from 'isomorphic-git'
+import { STAGE, TREE, WORKDIR, walk, isIgnored } from 'isomorphic-git'
 
 export function statusMatrix({
   fs,
@@ -16,6 +16,18 @@ export function statusMatrix({
     gitdir,
     trees: [TREE({ ref }), WORKDIR(), STAGE()],
     map: async function(filepath, [head, workdir, stage]) {
+      // Ignore ignored files, but only if they are not already tracked.
+      if (!head && !stage && workdir) {
+        if (
+          await isIgnored({
+            fs,
+            dir,
+            filepath,
+          })
+        ) {
+          return null
+        }
+      }
       // match against base paths
       if (!filepaths.some(base => worthWalking(filepath, base))) {
         return null
